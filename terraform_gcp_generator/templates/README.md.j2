@@ -1,0 +1,57 @@
+# {{ project_name }} - Proyecto Terraform para GCP
+
+## Descripción
+Este proyecto contiene la infraestructura como código (IaC) para desplegar recursos en Google Cloud Platform utilizando Terraform.
+
+## Estructura
+```
+.
+├── backend.tf       # Configuración del backend de almacenamiento del estado
+├── main.tf          # Recursos principales y habilitación de servicios
+├── outputs.tf       # Valores de salida del proyecto
+├── provider.tf      # Configuración de los proveedores (Google Cloud)
+├── variables.tf     # Definición de variables para el proyecto
+└── terraform.tfvars # Valores de las variables específicas del proyecto
+```
+
+## Requisitos
+- Terraform v1.0.0+
+- Google Cloud SDK
+- Cuenta de GCP con los permisos necesarios
+
+## Uso
+Para inicializar y aplicar la configuración:
+
+```bash
+# Inicializar Terraform y descargar los proveedores
+terraform init
+
+# Ver los cambios que se aplicarán
+terraform plan
+
+# Aplicar los cambios
+terraform apply
+```
+
+## Variables
+Las principales variables del proyecto son:
+
+- `project_id`: ID del proyecto de Google Cloud
+- `region`: Región de GCP donde se desplegarán los recursos
+- `zone`: Zona de GCP donde se desplegarán los recursos zonales
+- `environment`: Entorno de despliegue (dev, staging, prod)
+
+Puedes personalizar estas y otras variables editando el archivo `terraform.tfvars`.
+
+## Servicios de GCP
+Este proyecto puede incluir los siguientes servicios de GCP:
+
+- [Lista de servicios incluidos como Compute Engine, Cloud Storage, etc.]
+
+## Mantenimiento
+Este proyecto fue generado con Terraform GCP Generator.
+Para añadir más servicios o recursos de GCP, puedes utilizar:
+
+```bash
+tgcp añadir [ruta-proyecto] --servicio [nombre-servicio]
+``` 

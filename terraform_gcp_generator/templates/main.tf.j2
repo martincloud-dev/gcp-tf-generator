@@ -1,0 +1,26 @@
+# Configuración base para el proyecto de Terraform
+# Este archivo se generó automáticamente con Terraform GCP Generator
+
+# Obtener información del proyecto GCP
+data "google_project" "project" {
+  project_id = var.project_id
+}
+
+# Configuración de servicios API (activar según necesidades)
+resource "google_project_service" "services" {
+  for_each = toset([
+    "compute.googleapis.com",
+    "iam.googleapis.com",
+    "storage.googleapis.com",
+    "cloudresourcemanager.googleapis.com"
+  ])
+  
+  project = var.project_id
+  service = each.key
+  
+  disable_dependent_services = false
+  disable_on_destroy         = false
+}
+
+# Los recursos específicos se añadirán a través de otros archivos .tf
+# cuando agregues servicios a tu proyecto. 

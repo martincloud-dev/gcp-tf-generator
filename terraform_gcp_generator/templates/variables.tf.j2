@@ -1,0 +1,31 @@
+variable "project_id" {
+  description = "ID del proyecto de Google Cloud Platform"
+  type        = string
+}
+
+variable "region" {
+  description = "Región por defecto para los recursos"
+  type        = string
+  default     = "{{ region_default }}"
+}
+
+variable "zone" {
+  description = "Zona por defecto para los recursos"
+  type        = string
+  default     = "{{ zone_default }}"
+}
+
+variable "environment" {
+  description = "Entorno de despliegue (dev, staging, prod)"
+  type        = string
+  default     = "dev"
+}
+
+variable "labels" {
+  description = "Etiquetas a aplicar a todos los recursos"
+  type        = map(string)
+  default     = {
+    managed_by = "terraform"
+    project    = "terraform-gcp-generator"
+  }
+} 

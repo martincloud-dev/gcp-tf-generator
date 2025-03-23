@@ -1,0 +1,2 @@
+[console_scripts]
+tf-gcp = terraform_gcp_generator.cli.app:main
