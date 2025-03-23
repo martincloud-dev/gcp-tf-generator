@@ -83,25 +83,65 @@ def main(ctx: typer.Context):
 def mostrar_servicios():
     """
     Muestra en pantalla los servicios disponibles con sus abreviaturas.
+    Diseño minimalista y profesional. Lista ordenada alfabéticamente.
     """
-    typer.echo(f"{Fore.BLUE}Servicios disponibles:{Style.RESET_ALL}")
+    import shutil
     
-    # Agrupar por categorías
-    categorias = {
-        "Computación": ["compute-engine", "kubernetes-engine", "cloud-run", "cloud-functions", "app-engine"],
-        "Almacenamiento": ["cloud-storage", "cloud-sql", "bigquery", "spanner", "memorystore"],
-        "Red": ["load-balancer", "vpc", "firewall", "dns", "cloud-armor", "cdn", "cloud-nat", "ssl-certificate"],
-        "Mensajería y Orquestación": ["pubsub", "scheduler"],
-        "Procesamiento de Datos": ["dataflow"],
-        "DevOps y CI/CD": ["cloud-build", "artifact-registry"],
-        "IAM y Seguridad": ["iam"]
-    }
+    # Obtener el ancho de la terminal
+    ancho_terminal = shutil.get_terminal_size().columns
     
-    for categoria, servicios_cat in categorias.items():
-        typer.echo(f"\n{Fore.YELLOW}{categoria}:{Style.RESET_ALL}")
-        for servicio in servicios_disponibles:
-            if servicio[0] in servicios_cat:
-                typer.echo(f"  {Fore.GREEN}{servicio[0]}{Style.RESET_ALL} ({Fore.CYAN}{servicio[1]}{Style.RESET_ALL})")
+    # Definir caracteres para el diseño minimalista
+    simbolo_servicio = "•"
+    
+    # Imprimir encabezado elegante
+    typer.echo("\n" + "─" * ancho_terminal)
+    titulo = "SERVICIOS GCP DISPONIBLES"
+    padding = (ancho_terminal - len(titulo)) // 2
+    typer.echo(" " * padding + f"{Style.BRIGHT}{Fore.WHITE}{titulo}{Style.RESET_ALL}")
+    typer.echo("─" * ancho_terminal)
+    
+    # Preparar lista de servicios ordenada alfabéticamente
+    servicios_ordenados = [(nombre, abrev) for nombre, abrev, _ in sorted(servicios_disponibles, key=lambda x: x[0])]
+    
+    # Determinar anchos para formato uniforme
+    ancho_servicio = max([len(nombre) for nombre, _ in servicios_ordenados]) + 2
+    ancho_abrev = max([len(abrev) for _, abrev in servicios_ordenados]) + 2
+    
+    # Determinar número óptimo de columnas
+    ancho_elemento = ancho_servicio + ancho_abrev + 10  # Espacio para símbolos y márgenes
+    num_columnas = max(1, min(3, ancho_terminal // ancho_elemento))
+    
+    # Calcular elementos por columna para distribución equilibrada
+    servicios_por_columna = (len(servicios_ordenados) + num_columnas - 1) // num_columnas
+    
+    # Espacio antes de la lista
+    typer.echo("")
+    
+    # Imprimir servicios en formato de columnas
+    for i in range(servicios_por_columna):
+        linea = "    "
+        for j in range(num_columnas):
+            idx = i + j * servicios_por_columna
+            if idx < len(servicios_ordenados):
+                nombre, abrev = servicios_ordenados[idx]
+                elemento = f"{Fore.WHITE}{nombre.ljust(ancho_servicio)}{Style.RESET_ALL}{Fore.CYAN}({abrev}){Style.RESET_ALL}"
+                if j < num_columnas - 1 and idx < len(servicios_ordenados) - 1:
+                    elemento = elemento.ljust(ancho_elemento + 20)  # +20 para códigos de color
+                linea += f"{simbolo_servicio} {elemento}  "
+        typer.echo(linea)
+    
+    # Línea separadora
+    typer.echo("\n" + "─" * ancho_terminal)
+    
+    # Información de uso
+    typer.echo(f"\n{Style.BRIGHT}Uso:{Style.RESET_ALL}")
+    typer.echo(f"  tf-gcp create <nombre> --destino <ruta> --svc \"<abr1>,<abr2>,...\"")
+    typer.echo(f"  tf-gcp add <ruta-proyecto> --svc \"<abr1>,<abr2>,...\"")
+    
+    # Ejemplos
+    typer.echo(f"\n{Style.BRIGHT}Ejemplos:{Style.RESET_ALL}")
+    typer.echo(f"  tf-gcp create mi-proyecto --destino ./proyectos --svc \"cs,lb,vpc\"")
+    typer.echo(f"  tf-gcp add ./mi-proyecto --svc \"iam,fw\"\n")
 
 if __name__ == "__main__":
     app() 
